@@ -93,9 +93,16 @@ $exe = "$env:LOCALAPPDATA\FastTrackAgent\app\fasttrack-agent.exe"
 & $exe --disable-autostart  # desliga
 ```
 
-A partir da v0.4.1, o autostart roda sem janela de console visível (antes,
-fechar essa janela encerrava o Agent inteiro). Os logs continuam
-disponíveis em `%LOCALAPPDATA%\FastTrackAgent\logs\agent.log`.
+A partir da v0.4.2, o autostart roda sem nenhuma janela de console —
+o build é compilado com `console=False`, então o processo nunca chega a
+alocar uma janela (antes, na v0.4.1, a tentativa de esconder a janela via
+`--hide-console` só a minimizava, sem esconder de verdade, dependendo do
+host de console do Windows).
+
+Como não há mais console, os logs ficam em
+`%LOCALAPPDATA%\FastTrackAgent\logs\agent.log`. O jeito mais fácil de
+abri-los é pelo item **"Debug (abrir log)"** no menu do ícone da bandeja
+do FastTrack Agent.
 
 ## 5. Executar manualmente (sem autostart)
 
