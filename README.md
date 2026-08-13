@@ -11,7 +11,10 @@ Agent instalado.
 
 Cada release publica:
 
-- `fasttrack-agent-<versão>-win64.zip` — artefato assinado (Ed25519)
+- `fasttrack-agent-<versão>-win64.zip` — artefato assinado (Ed25519).
+  A partir da v0.4.1, inclui `install.ps1` dentro da pasta
+  `fasttrack-agent\`, junto do executável — não é preciso nenhum arquivo
+  além do próprio `.zip` para instalar.
 - `fasttrack-agent-<versão>-win64.zip.sha256.txt` — checksum
 - `manifest.json` — manifesto consumido pelo mecanismo de auto-update do Agent
 
@@ -51,15 +54,20 @@ artefato desta release, sem adulteração.
 
 ## 2. Instalar
 
-Extraia o `.zip` e rode `install.ps1` (dentro de `build\`) a partir do
-pacote extraído:
+`install.ps1` vem dentro do próprio `.zip` (pasta `fasttrack-agent\`,
+junto do executável). Extraia o `.zip` baixado e rode o script de
+dentro da pasta extraída, apontando `-ZipPath` de volta para o `.zip`
+original:
 
 ```powershell
+Expand-Archive .\fasttrack-agent-<versão>-win64.zip .\fasttrack-agent-<versão>-win64
+cd .\fasttrack-agent-<versão>-win64\fasttrack-agent
+
 # Sem enrollment automático (fazer depois manualmente):
-.\build\install.ps1 -ZipPath .\fasttrack-agent-<versão>-win64.zip
+.\install.ps1 -ZipPath ..\..\fasttrack-agent-<versão>-win64.zip
 
 # Com enrollment automático (código gerado em /admin/agents) e autostart:
-.\build\install.ps1 -ZipPath .\fasttrack-agent-<versão>-win64.zip `
+.\install.ps1 -ZipPath ..\..\fasttrack-agent-<versão>-win64.zip `
     -EnrollCode XXXX-XXXX-XX -EnableAutostart
 ```
 
@@ -84,6 +92,10 @@ $exe = "$env:LOCALAPPDATA\FastTrackAgent\app\fasttrack-agent.exe"
 & $exe --enable-autostart   # liga
 & $exe --disable-autostart  # desliga
 ```
+
+A partir da v0.4.1, o autostart roda sem janela de console visível (antes,
+fechar essa janela encerrava o Agent inteiro). Os logs continuam
+disponíveis em `%LOCALAPPDATA%\FastTrackAgent\logs\agent.log`.
 
 ## 5. Executar manualmente (sem autostart)
 
